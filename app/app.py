@@ -230,25 +230,20 @@ def render_metric_row(name: str, value: str):
 
 def render_flow_steps(steps: list, container_label: str = ""):
     """Reusable vertical flow/pipeline visualization."""
-    label_html = ""
-    if container_label:
-        label_html = f"""
-        <div style="font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase;
-            color:#9CA3AF; margin-bottom:1rem;">{container_label}</div>"""
-    st.markdown(f"""
-    <div class="hg-card" style="padding:1.5rem;">
-        {label_html}
-    """, unsafe_allow_html=True)
-    for i, step in enumerate(steps):
-        st.markdown(f"""
-        <div class="hg-flow-step">
-            <div class="hg-flow-dot"></div>
-            <div class="hg-flow-text">{step}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        if i < len(steps) - 1:
-            st.markdown('<div class="hg-flow-line"></div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    label_html = (
+        f'<div style="font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; '
+        f'color:#9CA3AF; margin-bottom:1rem;">{container_label}</div>'
+        if container_label else ""
+    )
+    steps_html = "".join([
+        f'<div class="hg-flow-step"><div class="hg-flow-dot"></div><div class="hg-flow-text">{step}</div></div>'
+        + ('<div class="hg-flow-line"></div>' if i < len(steps) - 1 else '')
+        for i, step in enumerate(steps)
+    ])
+    st.markdown(
+        f'<div class="hg-card" style="padding:1.5rem;">{label_html}{steps_html}</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def render_result_card(cancel_pct: float):
@@ -934,29 +929,19 @@ if page == "🏠  Home":
     # Why HotelGuard AI?
     render_section_header("Why HotelGuard AI?")
 
-    col_l, col_r = st.columns([3, 2], gap="large")
-    with col_l:
-        st.markdown("""
-        <div class="hg-card">
-            <p style="margin-bottom:1rem;">
-                Hotel cancellations create uncertainty in room allocation,
-                revenue forecasting, and operational planning. Even a few
-                percentage points of unpredicted cancellations can significantly
-                impact quarterly revenue.
-            </p>
-            <p>
-                HotelGuard AI uses machine learning to estimate cancellation
-                risk before arrival, helping hotel teams make better allocation
-                and revenue-management decisions.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_r:
-        render_flow_steps(
-            ["Booking Data", "ML Model", "Cancellation Risk", "Business Action"],
-            container_label="How It Works"
-        )
+    st.markdown("""
+    <div class="hg-card">
+        <p style="margin-bottom:0.75rem; font-size:1.02rem; line-height:1.6;">
+            Hotel cancellations create uncertainty in room allocation, revenue forecasting,
+            and operational planning. Even a few percentage points of unpredicted cancellations
+            can significantly impact quarterly revenue.
+        </p>
+        <p style="margin-bottom:0; font-size:1.02rem; line-height:1.6;">
+            <strong>HotelGuard AI</strong> uses machine learning to estimate cancellation risk before arrival,
+            helping hotel revenue and operations teams make proactive allocation and overbooking decisions.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     render_divider()
 

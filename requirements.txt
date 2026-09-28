@@ -16,9 +16,6 @@ lightgbm>=4.0.0
 # ── Imbalanced Learning ──
 imbalanced-learn>=0.11.0
 
-# ── Model Interpretability ──
-shap>=0.42.0
-
 # ── Experiment Tracking ──
 mlflow>=2.7.0
 

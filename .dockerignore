@@ -1,0 +1,34 @@
+# ── Git ──
+.git
+.github
+
+# ── Python cache ──
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.pytest_cache
+
+# ── Development files ──
+notebooks/
+experiments/
+reports/
+tests/
+*.ipynb
+project.log
+skills.md
+
+# ── Virtual environments ──
+venv/
+env/
+.env
+.venv/
+
+# ── IDE ──
+.vscode/
+.idea/
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini

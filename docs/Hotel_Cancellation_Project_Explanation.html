@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hotel Booking Cancellation Prediction — Complete Project Explanation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@page {
+    size: A4;
+    margin: 16mm 16mm 18mm 16mm;
+    @bottom-right {
+        content: counter(page);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+    }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1e293b;
+    background-color: #ffffff;
+    font-size: 10.5pt;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: 1.6em;
+    margin-bottom: 0.6em;
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+h1 {
+    font-size: 23pt;
+    font-weight: 800;
+    color: #1e3a2f;
+    letter-spacing: -0.02em;
+    border-bottom: 3px solid #315c4b;
+    padding-bottom: 12px;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 15pt;
+    font-weight: 700;
+    color: #1e3a2f;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding-bottom: 8px;
+    margin-top: 1.8em;
+}
+
+h3 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 1.3em;
+}
+
+p {
+    margin: 0.7em 0;
+}
+
+/* Executive Header Card */
+.doc-header {
+    background: linear-gradient(135deg, #1e3a2f 0%, #285443 60%, #366d57 100%);
+    color: white;
+    padding: 28px 30px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(30, 58, 47, 0.15);
+}
+
+.doc-header h1 {
+    color: #ffffff;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0 0 10px 0;
+    font-size: 21pt;
+}
+
+.doc-header .subtitle {
+    font-size: 12pt;
+    color: #cbd5e1;
+    font-weight: 400;
+    margin: 0 0 16px 0;
+}
+
+.badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-size: 8pt;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.2em 0;
+    font-size: 9.5pt;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+thead tr {
+    background-color: #1e3a2f;
+    color: #ffffff;
+}
+
+th {
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Code Blocks */
+pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 8.5pt;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 1.2em 0;
+    border: 1px solid #1e293b;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+code {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 9pt;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 5px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+}
+
+/* Callouts / Alerts */
+.callout {
+    margin: 1.2em 0;
+    padding: 12px 18px;
+    border-radius: 8px;
+    border-left: 5px solid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.callout-title {
+    font-weight: 700;
+    font-size: 9.5pt;
+    margin-bottom: 4px;
+}
+
+.callout-note {
+    background-color: #f0f9ff;
+    border-color: #0284c7;
+    color: #0c4a6e;
+}
+.callout-note .callout-title { color: #0369a1; }
+
+.callout-tip {
+    background-color: #f0fdf4;
+    border-color: #16a34a;
+    color: #14532d;
+}
+.callout-tip .callout-title { color: #15803d; }
+
+.callout-important {
+    background-color: #faf5ff;
+    border-color: #9333ea;
+    color: #581c87;
+}
+.callout-important .callout-title { color: #7e22ce; }
+
+.callout-warning {
+    background-color: #fffbeb;
+    border-color: #d97706;
+    color: #78350f;
+}
+.callout-warning .callout-title { color: #b45309; }
+
+.callout-caution {
+    background-color: #fef2f2;
+    border-color: #dc2626;
+    color: #7f1d1d;
+}
+.callout-caution .callout-title { color: #b91c1c; }
+
+blockquote {
+    border-left: 4px solid #cbd5e1;
+    margin: 1em 0;
+    padding: 6px 16px;
+    color: #475569;
+    background-color: #f8fafc;
+    border-radius: 0 6px 6px 0;
+}
+
+ul, ol {
+    padding-left: 22px;
+    margin: 0.8em 0;
+}
+
+li {
+    margin-bottom: 4px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 2em 0;
+}
+
+.mermaid {
+    text-align: center;
+    margin: 1.5em 0;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* Avoid breaking inside sections */
+.section-block {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+</script>
+</head>
+<body>
+
+<div class="doc-header">
+    <h1>🏨 Hotel Booking Cancellation Prediction</h1>
+    <div class="subtitle">Complete End-to-End Project Explanation & Technical Architecture Guide</div>
+    <div class="badge-row">
+        <span class="badge">Machine Learning</span>
+        <span class="badge">Python 3.11</span>
+        <span class="badge">XGBoost</span>
+        <span class="badge">Streamlit UI</span>
+        <span class="badge">Docker</span>
+        <span class="badge">CI/CD Automated</span>
+    </div>
+</div>
+
+<h1 id="hotel-booking-cancellation-prediction-complete-project-explanation">🏨 Hotel Booking Cancellation Prediction — Complete Project Explanation</h1>
+<p><strong>A Step-by-Step Guide to Understanding the Entire Project</strong></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-problem-statement--business-context">Problem Statement &amp; Business Context</a></li>
+<li><a href="#2-dataset-overview">Dataset Overview</a></li>
+<li><a href="#3-project-architecture">Project Architecture</a></li>
+<li><a href="#4-sprint-1--data-understanding--cleaning">Sprint 1 — Data Understanding &amp; Cleaning</a></li>
+<li><a href="#5-sprint-2--baseline-model-comparison">Sprint 2 — Baseline Model Comparison</a></li>
+<li><a href="#6-sprint-3--feature-engineering--hyperparameter-tuning">Sprint 3 — Feature Engineering &amp; Hyperparameter Tuning</a></li>
+<li><a href="#7-sprint-4--pipeline-app--deployment">Sprint 4 — Pipeline, App &amp; Deployment</a></li>
+<li><a href="#8-the-streamlit-web-application">The Streamlit Web Application</a></li>
+<li><a href="#9-docker-deployment">Docker Deployment</a></li>
+<li><a href="#10-cicd-pipeline">CI/CD Pipeline</a></li>
+<li><a href="#11-model-performance-analysis">Model Performance Analysis</a></li>
+<li><a href="#12-key-learnings--takeaways">Key Learnings &amp; Takeaways</a></li>
+</ol>
+<hr />
+<h2 id="1-problem-statement-business-context">1. Problem Statement &amp; Business Context</h2>
+<h3 id="what-problem-are-we-solving">What Problem Are We Solving?</h3>
+<p>Hotels lose significant revenue when guests cancel their bookings. When a cancellation happens:<br />
+- The room stays <strong>empty</strong> — no revenue is earned<br />
+- The hotel already spent money on <strong>staff allocation</strong> and <strong>inventory planning</strong><br />
+- Last-minute cancellations leave <strong>no time</strong> to find replacement guests</p>
+<h3 id="our-solution">Our Solution</h3>
+<p>We built a <strong>machine learning model</strong> that predicts whether a hotel booking will be canceled <strong>before the guest arrives</strong>. This allows hotels to:</p>
+<pre><code>Guest makes booking → ML Model scores risk → Hotel takes action
+
+Example actions:
+├── LOW RISK (0-30%)   → No action needed
+├── MEDIUM RISK (30-60%) → Send confirmation email, offer incentive to keep booking
+└── HIGH RISK (60-100%)  → Overbook strategically, prepare for cancellation
+</code></pre>
+<h3 id="why-this-matters-business-impact">Why This Matters (Business Impact)</h3>
+<table>
+<thead>
+<tr>
+<th>Without ML</th>
+<th>With ML</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React to cancellations after they happen</td>
+<td>Predict cancellations before they happen</td>
+</tr>
+<tr>
+<td>Revenue lost from empty rooms</td>
+<td>Overbook intelligently, fewer empty rooms</td>
+</tr>
+<tr>
+<td>No insight into which bookings are risky</td>
+<td>Risk score for every booking</td>
+</tr>
+<tr>
+<td>Manual guesswork</td>
+<td>Data-driven decisions</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-dataset-overview">2. Dataset Overview</h2>
+<h3 id="source">Source</h3>
+<p><strong>Hotel Booking Demand Dataset</strong> — real-world booking data from two hotels in Portugal (a City Hotel and a Resort Hotel), covering the period July 2015 to August 2017.</p>
+<h3 id="size-shape">Size &amp; Shape</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Total bookings</strong></td>
+<td>119,390 rows</td>
+</tr>
+<tr>
+<td><strong>Features</strong></td>
+<td>32 columns</td>
+</tr>
+<tr>
+<td><strong>Target variable</strong></td>
+<td><code>is_canceled</code> (0 = Not Canceled, 1 = Canceled)</td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>hotel_bookings.csv</code> (16.8 MB)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="target-distribution-class-balance">Target Distribution (Class Balance)</h3>
+<pre><code>Not Canceled (0): ████████████████████████████████  75,166 (63%)
+Canceled (1):     ███████████████████              44,224 (37%)
+</code></pre>
+<p>This is <strong>moderately imbalanced</strong> — the majority class (Not Canceled) has almost twice as many samples. This means:<br />
+- A "dumb" model that always predicts "Not Canceled" would get 63% accuracy<br />
+- We need <strong>stratified splitting</strong> to maintain this ratio in train/test sets<br />
+- We use <code>scale_pos_weight</code> to tell the model that missing a cancellation is costly</p>
+<h3 id="key-columns-explained">Key Columns Explained</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Description</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lead_time</code></td>
+<td>Numeric</td>
+<td>Days between booking and arrival</td>
+<td>Longer lead time → higher cancellation risk</td>
+</tr>
+<tr>
+<td><code>adr</code></td>
+<td>Numeric</td>
+<td>Average Daily Rate (price per night)</td>
+<td>Expensive bookings cancel differently</td>
+</tr>
+<tr>
+<td><code>deposit_type</code></td>
+<td>Categorical</td>
+<td>"No Deposit", "Non Refund", "Refundable"</td>
+<td>Non-refundable deposits have ~99% cancellation rate!</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>Categorical</td>
+<td>Guest's country (177 unique values)</td>
+<td>Some countries have higher cancellation rates</td>
+</tr>
+<tr>
+<td><code>market_segment</code></td>
+<td>Categorical</td>
+<td>How the booking was made (Online TA, Direct, etc.)</td>
+<td>Online travel agencies have more cancellations</td>
+</tr>
+<tr>
+<td><code>previous_cancellations</code></td>
+<td>Numeric</td>
+<td>Number of past cancellations by this guest</td>
+<td>Repeat cancelers are very likely to cancel again</td>
+</tr>
+<tr>
+<td><code>is_repeated_guest</code></td>
+<td>Numeric</td>
+<td>Whether the guest has stayed before (0/1)</td>
+<td>Repeat guests cancel less</td>
+</tr>
+<tr>
+<td><code>reservation_status</code></td>
+<td>Categorical</td>
+<td>⚠️ <strong>DATA LEAKAGE</strong> — directly reveals the target</td>
+<td><strong>Must be dropped</strong> before modeling</td>
+</tr>
+</tbody>
+</table>
+<h3 id="missing-values">Missing Values</h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Missing Count</th>
+<th>%</th>
+<th>Strategy Applied</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>company</code></td>
+<td>112,593</td>
+<td>94.3%</td>
+<td><strong>Drop column</strong> (too many missing)</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>16,340</td>
+<td>13.7%</td>
+<td>Fill with 0 (no agent)</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>488</td>
+<td>0.4%</td>
+<td>Fill with "Unknown"</td>
+</tr>
+<tr>
+<td><code>children</code></td>
+<td>4</td>
+<td>0.003%</td>
+<td>Fill with 0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-project-architecture">3. Project Architecture</h2>
+<h3 id="folder-structure">Folder Structure</h3>
+<pre><code>hotel_cancellation/
+│
+├── 📁 data/                          ← Data at different processing stages
+│   ├── raw/                          ← Untouched original data
+│   ├── interim/                      ← Cleaned (nulls handled, leakage removed)
+│   ├── processed/                    ← Final model-ready data
+│   └── external/                     ← Reference/lookup data
+│
+├── 📁 notebooks/                     ← Jupyter notebooks (exploration &amp; experiments)
+│   ├── 01_data_understanding.ipynb   ← EDA, visualizations, data quality checks
+│   ├── 02_preprocessing.ipynb        ← Cleaning, encoding, scaling
+│   ├── 03_baseline_models.ipynb      ← Train 6 models, compare metrics
+│   ├── 04_feature_engineering.ipynb   ← Create domain features, retrain
+│   └── 05_hyperparameter_tuning.ipynb ← GridSearch/RandomSearch for best model
+│
+├── 📁 src/                           ← Modular source code (reusable functions)
+│   ├── data/                         ← load_data.py, clean_data.py
+│   ├── features/                     ← engineer.py, encode.py, scale.py, select.py
+│   ├── models/                       ← train.py, evaluate.py, tune.py, predict.py
+│   ├── pipeline/                     ← build_pipeline.py (end-to-end sklearn Pipeline)
+│   └── utils/                        ← config.py (all settings), logger.py
+│
+├── 📁 models/                        ← Serialized model + metadata
+│   ├── model.pkl                     ← Trained XGBoost pipeline (4.6 MB)
+│   └── model_metadata.json           ← Metrics, features, training date
+│
+├── 📁 app/                           ← Streamlit web application
+│   ├── app.py                        ← 2,110-line premium UI (5 pages)
+│   └── assets/hero_bg.jpg            ← Hero background image
+│
+├── 📁 tests/                         ← Automated test suite (pytest)
+├── 📁 reports/                       ← EDA report, model comparison, 20 figures
+├── 📁 deployment/                    ← Dockerfile + production requirements
+├── 📁 experiments/                   ← MLflow experiment tracking
+└── 📁 .github/workflows/            ← CI/CD pipeline (GitHub Actions)
+</code></pre>
+<h3 id="how-the-code-modules-connect">How the Code Modules Connect</h3>
+<div class="mermaid">flowchart LR
+    A[&quot;📄 hotel_bookings.csv&quot;] --&gt; B[&quot;load_data.py&quot;]
+    B --&gt; C[&quot;clean_data.py&quot;]
+    C --&gt; D[&quot;engineer.py&quot;]
+    D --&gt; E[&quot;encode.py + scale.py&quot;]
+    E --&gt; F[&quot;train.py&quot;]
+    F --&gt; G[&quot;evaluate.py&quot;]
+    G --&gt; H[&quot;tune.py&quot;]
+    H --&gt; I[&quot;build_pipeline.py&quot;]
+    I --&gt; J[&quot;🗄️ model.pkl&quot;]
+    J --&gt; K[&quot;predict.py&quot;]
+    K --&gt; L[&quot;🌐 app.py (Streamlit)&quot;]
+</div>
+<h3 id="why-modular-code">Why Modular Code?</h3>
+<p>Instead of putting everything in one notebook, we split the code into <strong>reusable modules</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Notebook-only</th>
+<th>Modular (our approach)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reusability</strong></td>
+<td>❌ Copy-paste code</td>
+<td>✅ <code>from src.data.clean_data import clean_data</code></td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>❌ Hard to test</td>
+<td>✅ pytest can import and test each function</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>❌ Can't deploy a notebook</td>
+<td>✅ App imports from <code>src/</code></td>
+</tr>
+<tr>
+<td><strong>Maintenance</strong></td>
+<td>❌ One change affects everything</td>
+<td>✅ Change one file, others unaffected</td>
+</tr>
+<tr>
+<td><strong>Collaboration</strong></td>
+<td>❌ Merge conflicts</td>
+<td>✅ Each person works on their module</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-sprint-1-data-understanding-cleaning">4. Sprint 1 — Data Understanding &amp; Cleaning</h2>
+<h3 id="goal">Goal</h3>
+<p>Understand the raw data, identify issues, and produce a clean dataset ready for modeling.</p>
+<h3 id="step-41-loading-the-data">Step 4.1: Loading the Data</h3>
+<p><strong>File:</strong> <code>src/data/load_data.py</code></p>
+<pre><code class="language-python">def load_raw_data(path=None, copy_to_raw=True):
+    df = pd.read_csv(path)           # Read the CSV
+    # Validation checks:
+    # - Log shape (119,390 × 32)
+    # - Log columns with null values
+    # - Count duplicate rows
+    # - Save a copy to data/raw/ for reproducibility
+    return df
+</code></pre>
+<p><strong>What this does:</strong><br />
+1. Reads the CSV file into a pandas DataFrame<br />
+2. Runs <strong>basic sanity checks</strong> (shape, nulls, duplicates)<br />
+3. Saves a copy to <code>data/raw/</code> so the original is never modified</p>
+<h3 id="step-42-cleaning-the-data">Step 4.2: Cleaning the Data</h3>
+<p><strong>File:</strong> <code>src/data/clean_data.py</code></p>
+<p>The cleaning pipeline has <strong>8 steps</strong>, each solving a specific data quality issue:</p>
+<pre><code>Raw Data (119,390 rows × 32 columns)
+    │
+    ├── Step 1: Drop leakage columns
+    │   ├── reservation_status       ← directly reveals if booking was canceled!
+    │   ├── reservation_status_date  ← derived from above
+    │   └── company                  ← 94% missing, useless
+    │   Result: 29 columns remain
+    │
+    ├── Step 2: Replace &quot;NULL&quot; strings with actual NaN
+    │   └── Some columns have the text &quot;NULL&quot; instead of real null values
+    │
+    ├── Step 3: Impute remaining nulls
+    │   ├── children: NaN → 0 (no children)
+    │   ├── country: NaN → &quot;Unknown&quot;
+    │   └── agent: NaN → 0 (no agent)
+    │
+    ├── Step 4: Remove invalid rows
+    │   ├── Negative ADR (price can't be negative)
+    │   └── Zero-guest bookings (no adults + no children + no babies)
+    │   Result: ~180 rows removed
+    │
+    ├── Step 5: Convert month names to numbers
+    │   └── &quot;January&quot; → 1, &quot;February&quot; → 2, ..., &quot;December&quot; → 12
+    │
+    ├── Step 6: Fix data types
+    │   └── children, agent: float → int
+    │
+    ├── Step 7: Deduplicate
+    │   └── Drop exact duplicate rows
+    │
+    └── Step 8: Save cleaned data
+        └── data/interim/hotel_bookings_cleaned.csv
+
+Final: ~118,000+ rows × 29 columns (clean!)
+</code></pre>
+<h3 id="what-is-data-leakage-and-why-does-it-matter">What is Data Leakage and Why Does It Matter?</h3>
+<div class="callout callout-caution"><div class="callout-title">🛑 Critical Caution</div>
+
+> **Data leakage** means using information during training that wouldn't be available at prediction time.
+
+</div>
+
+<p>The <code>reservation_status</code> column has values like "Canceled", "Check-Out", "No-Show" — this <strong>directly tells us the answer</strong>! If we leave it in, the model gets 99%+ accuracy but it's <strong>cheating</strong>. In production, when a new booking comes in, we won't know the reservation status yet.</p>
+<p><strong>Analogy:</strong> It's like studying for an exam with the answer key. You'll ace the practice test but fail when real questions come.</p>
+<h3 id="notebook">Notebook</h3>
+<p>📓 <code>notebooks/01_data_understanding.ipynb</code> — Contains all EDA visualizations: distributions, correlations, missing value analysis.</p>
+<h3 id="report-output">Report Output</h3>
+<p>📊 <code>reports/eda_report.md</code> — Summary of all findings.</p>
+<hr />
+<h2 id="5-sprint-2-baseline-model-comparison">5. Sprint 2 — Baseline Model Comparison</h2>
+<h3 id="goal_1">Goal</h3>
+<p>Train multiple different ML algorithms on the same data and compare their performance to find the best candidate.</p>
+<h3 id="why-compare-multiple-models">Why Compare Multiple Models?</h3>
+<p>Different algorithms have different strengths:</p>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Strengths</th>
+<th>Weaknesses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logistic Regression</strong></td>
+<td>Fast, interpretable, works well when features are linearly related to target</td>
+<td>Can't capture complex non-linear patterns</td>
+</tr>
+<tr>
+<td><strong>Decision Tree</strong></td>
+<td>Easy to understand, handles non-linear patterns</td>
+<td>Overfits easily (memorizes training data)</td>
+</tr>
+<tr>
+<td><strong>Random Forest</strong></td>
+<td>Reduces overfitting by averaging many trees</td>
+<td>Slower, less interpretable</td>
+</tr>
+<tr>
+<td><strong>Gradient Boosting</strong></td>
+<td>Very accurate, learns from previous mistakes</td>
+<td>Slower training, risk of overfitting</td>
+</tr>
+<tr>
+<td><strong>XGBoost</strong></td>
+<td>State-of-the-art boosting, built-in regularization</td>
+<td>More hyperparameters to tune</td>
+</tr>
+<tr>
+<td><strong>LightGBM</strong></td>
+<td>Fastest training, handles large data well</td>
+<td>Can overfit on small datasets</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-the-training-works">How the Training Works</h3>
+<p><strong>File:</strong> <code>src/models/train.py</code></p>
+<pre><code>Full Dataset
+    │
+    ├── 80% Training Set (stratified)
+    │   ├── 85% actual training
+    │   └── 15% validation (for early stopping)
+    │
+    └── 20% Test Set (stratified, held out)
+        └── Used ONLY for final evaluation
+</code></pre>
+<p><strong>Stratified split</strong> means the 63/37 class ratio is preserved in both train and test sets. Without this, one split might get 70/30 and another 55/45, leading to inconsistent results.</p>
+<h3 id="step-51-encoding-categorical-features">Step 5.1: Encoding Categorical Features</h3>
+<p>Before models can process the data, text columns need to be converted to numbers:</p>
+<p><strong>File:</strong> <code>src/features/encode.py</code></p>
+<pre><code>Encoding Strategies:
+│
+├── One-Hot Encoding (for low-cardinality: hotel, meal, deposit_type, etc.)
+│   &quot;hotel&quot; = &quot;City Hotel&quot; → hotel_City Hotel = 1, hotel_Resort Hotel = 0
+│   &quot;hotel&quot; = &quot;Resort Hotel&quot; → hotel_City Hotel = 0, hotel_Resort Hotel = 1
+│
+├── Label Encoding (for ordinal data)
+│   Converts categories to integers: &quot;A&quot; → 0, &quot;B&quot; → 1, &quot;C&quot; → 2
+│
+└── Frequency Encoding (for high-cardinality: country with 177 values)
+    &quot;PRT&quot; appears in 27% of rows → country = 0.27
+    &quot;GBR&quot; appears in 10% of rows → country = 0.10
+    (Avoids creating 177 new columns!)
+</code></pre>
+<h3 id="step-52-baseline-results">Step 5.2: Baseline Results</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1</th>
+<th>AUC-ROC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>XGBoost</strong> 🏆</td>
+<td>85.14%</td>
+<td>75.03%</td>
+<td>68.32%</td>
+<td>0.715</td>
+<td>0.917</td>
+</tr>
+<tr>
+<td>RandomForest</td>
+<td>84.66%</td>
+<td>76.46%</td>
+<td>63.33%</td>
+<td>0.693</td>
+<td>0.908</td>
+</tr>
+<tr>
+<td>GradientBoosting</td>
+<td>83.71%</td>
+<td>75.41%</td>
+<td>59.85%</td>
+<td>0.667</td>
+<td>0.896</td>
+</tr>
+<tr>
+<td>DecisionTree</td>
+<td>79.89%</td>
+<td>63.19%</td>
+<td>63.20%</td>
+<td>0.632</td>
+<td>0.748</td>
+</tr>
+<tr>
+<td>LogisticRegression</td>
+<td>78.52%</td>
+<td>67.11%</td>
+<td>41.87%</td>
+<td>0.516</td>
+<td>0.795</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Winner:</strong> XGBoost — best accuracy, best F1, best AUC-ROC.</p>
+<h3 id="understanding-the-metrics">Understanding the Metrics</h3>
+<pre><code>Accuracy  = How many predictions were correct overall
+            (Can be misleading with imbalanced data!)
+
+Precision = When the model says &quot;Canceled&quot;, how often is it right?
+            High precision = few false alarms
+
+Recall    = Of all actual cancellations, how many did the model catch?
+            High recall = few missed cancellations
+
+F1 Score  = Harmonic mean of Precision and Recall
+            Balances both — the metric we optimize for
+
+AUC-ROC   = How well does the model rank cancellations vs non-cancellations?
+            1.0 = perfect ranking, 0.5 = random guessing
+</code></pre>
+<h3 id="notebook_1">Notebook</h3>
+<p>📓 <code>notebooks/03_baseline_models.ipynb</code></p>
+<hr />
+<h2 id="6-sprint-3-feature-engineering-hyperparameter-tuning">6. Sprint 3 — Feature Engineering &amp; Hyperparameter Tuning</h2>
+<h3 id="goal_2">Goal</h3>
+<p>Create new features from domain knowledge and fine-tune the best model's hyperparameters.</p>
+<h3 id="step-61-feature-engineering">Step 6.1: Feature Engineering</h3>
+<p><strong>File:</strong> <code>src/features/engineer.py</code></p>
+<p>Feature engineering is about creating <strong>new columns</strong> from existing ones that capture domain knowledge the raw data doesn't explicitly show:</p>
+<table>
+<thead>
+<tr>
+<th>New Feature</th>
+<th>Formula</th>
+<th>Why It Helps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_stay</code></td>
+<td>weekend_nights + weekday_nights</td>
+<td>Total stay duration — shorter stays cancel more</td>
+</tr>
+<tr>
+<td><code>total_guests</code></td>
+<td>adults + children + babies</td>
+<td>Group size affects cancellation behavior</td>
+</tr>
+<tr>
+<td><code>adr_per_person</code></td>
+<td>price / total_guests</td>
+<td>Per-person cost is more meaningful than room price</td>
+</tr>
+<tr>
+<td><code>is_local</code></td>
+<td>1 if country == "PRT"</td>
+<td>Local guests cancel less than international</td>
+</tr>
+<tr>
+<td><code>is_same_room</code></td>
+<td>1 if reserved == assigned room</td>
+<td>Room changes may indicate overbooking</td>
+</tr>
+<tr>
+<td><code>is_family</code></td>
+<td>1 if children &gt; 0 or babies &gt; 0</td>
+<td>Families cancel less — they plan more carefully</td>
+</tr>
+<tr>
+<td><code>booking_changes_flag</code></td>
+<td>1 if booking_changes &gt; 0</td>
+<td>Any modification signals engagement</td>
+</tr>
+<tr>
+<td><code>cancellation_ratio</code></td>
+<td>prev_cancels / (prev_cancels + prev_bookings)</td>
+<td>Historical cancel rate per guest</td>
+</tr>
+<tr>
+<td><code>total_previous</code></td>
+<td>prev_cancels + prev_bookings</td>
+<td>Total booking history</td>
+</tr>
+<tr>
+<td><code>arrival_month_sin</code></td>
+<td>sin(2π × month / 12)</td>
+<td>Cyclical encoding — December is close to January</td>
+</tr>
+<tr>
+<td><code>arrival_month_cos</code></td>
+<td>cos(2π × month / 12)</td>
+<td>Same — captures seasonality properly</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-cyclical-month-encoding">Why Cyclical Month Encoding?</h3>
+<p>If we use months as plain numbers (1-12), the model thinks December (12) is very far from January (1). But they're actually adjacent months! Sine/cosine encoding puts them on a circle:</p>
+<pre><code>         Jan (1)
+        /       \
+   Dec (12)    Feb (2)
+      |           |
+   Nov (11)    Mar (3)
+      |           |
+   Oct (10)    Apr (4)
+        \       /
+    Sep (9)  May (5)
+        \   /
+    Aug (8) Jun (6)
+          |
+       Jul (7)
+
+sin(Jan) ≈ sin(Dec) ← Now the model knows they're close!
+</code></pre>
+<h3 id="step-62-feature-selection">Step 6.2: Feature Selection</h3>
+<p><strong>File:</strong> <code>src/features/select.py</code></p>
+<p>Not all features are useful. Some are redundant (highly correlated), and some add noise. We use three methods:</p>
+<pre><code>Feature Selection Methods:
+│
+├── 1. Correlation Filter (threshold=0.90)
+│   If two features have &gt;90% correlation, drop the less useful one
+│   (they provide the same information — keep one, drop the other)
+│
+├── 2. Recursive Feature Elimination (RFE)
+│   Repeatedly remove the weakest feature and retrain
+│   Until only the top N features remain
+│
+└── 3. Tree-based Importance
+    XGBoost/RandomForest tell us which features they use most
+    Keep the top 15-20 most important ones
+</code></pre>
+<h3 id="step-63-hyperparameter-tuning">Step 6.3: Hyperparameter Tuning</h3>
+<p><strong>File:</strong> <code>src/models/tune.py</code></p>
+<p>Every ML model has <strong>hyperparameters</strong> — settings that control how it learns. Finding the best combination is like tuning a radio to the clearest frequency.</p>
+<p><strong>Key XGBoost Hyperparameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>What It Controls</th>
+<th>Anti-Overfitting?</th>
+<th>Anti-Underfitting?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>n_estimators=300</code></td>
+<td>Number of boosting rounds (trees)</td>
+<td></td>
+<td>✅ More trees = more learning</td>
+</tr>
+<tr>
+<td><code>max_depth=6</code></td>
+<td>Maximum tree depth</td>
+<td>✅ Shallower = simpler</td>
+<td></td>
+</tr>
+<tr>
+<td><code>learning_rate=0.1</code></td>
+<td>How much each tree contributes</td>
+<td>✅ Slower = more careful</td>
+<td></td>
+</tr>
+<tr>
+<td><code>min_child_weight=5</code></td>
+<td>Minimum samples per leaf</td>
+<td>✅ Prevents learning noise</td>
+<td></td>
+</tr>
+<tr>
+<td><code>subsample=0.8</code></td>
+<td>% of data each tree sees</td>
+<td>✅ Like dropout for trees</td>
+<td></td>
+</tr>
+<tr>
+<td><code>colsample_bytree=0.8</code></td>
+<td>% of features each tree sees</td>
+<td>✅ Prevents over-reliance</td>
+<td></td>
+</tr>
+<tr>
+<td><code>reg_alpha=0.1</code></td>
+<td>L1 regularization (lasso)</td>
+<td>✅ Pushes weak features to 0</td>
+<td></td>
+</tr>
+<tr>
+<td><code>reg_lambda=1.0</code></td>
+<td>L2 regularization (ridge)</td>
+<td>✅ Shrinks large weights</td>
+<td></td>
+</tr>
+<tr>
+<td><code>scale_pos_weight=1.7</code></td>
+<td>Class imbalance correction</td>
+<td></td>
+<td>✅ Boosts recall</td>
+</tr>
+<tr>
+<td><code>early_stopping_rounds=30</code></td>
+<td>Stop if no improvement for 30 rounds</td>
+<td>✅ Prevents overtraining</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tuning Methods:</strong></p>
+<pre><code>GridSearchCV:
+  Try EVERY combination of parameters (exhaustive but slow)
+  Example: 3 × 3 × 2 = 18 combinations × 5 folds = 90 model fits
+
+RandomizedSearchCV:
+  Try N random combinations (faster, almost as good)
+  Example: 50 random combos × 5 folds = 250 model fits
+</code></pre>
+<h3 id="final-model-after-tuning">Final Model (After Tuning)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before Tuning</th>
+<th>After Tuning</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>85.14%</td>
+<td><strong>85.70%</strong></td>
+<td>+0.56%</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>75.03%</td>
+<td><strong>76.04%</strong></td>
+<td>+1.01%</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>68.32%</td>
+<td><strong>69.56%</strong></td>
+<td>+1.24%</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>0.715</td>
+<td><strong>0.726</strong></td>
+<td>+0.011</td>
+</tr>
+<tr>
+<td>AUC-ROC</td>
+<td>0.917</td>
+<td><strong>0.922</strong></td>
+<td>+0.005</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notebook_2">Notebook</h3>
+<p>📓 <code>notebooks/04_feature_engineering.ipynb</code><br />
+📓 <code>notebooks/05_hyperparameter_tuning.ipynb</code></p>
+<hr />
+<h2 id="7-sprint-4-pipeline-app-deployment">7. Sprint 4 — Pipeline, App &amp; Deployment</h2>
+<h3 id="goal_3">Goal</h3>
+<p>Package everything into a production-ready sklearn Pipeline, build a web app, and containerize with Docker.</p>
+<h3 id="step-71-the-sklearn-pipeline">Step 7.1: The sklearn Pipeline</h3>
+<p><strong>File:</strong> <code>src/pipeline/build_pipeline.py</code></p>
+<p>A Pipeline bundles <strong>all preprocessing + the model</strong> into one object. This means:<br />
+- No more separate "transform then predict" steps<br />
+- No risk of applying wrong transformations<br />
+- One <code>.pkl</code> file contains everything needed for prediction</p>
+<pre><code>Pipeline Architecture:
+│
+├── ColumnTransformer (preprocessor)
+│   │
+│   ├── &quot;num&quot; → 18 numeric features
+│   │   ├── SimpleImputer(strategy=&quot;median&quot;)  ← Fill missing with median
+│   │   └── StandardScaler()                  ← Zero mean, unit variance
+│   │
+│   ├── &quot;cat_low&quot; → 8 low-cardinality categoricals
+│   │   ├── SimpleImputer(fill_value=&quot;Missing&quot;) ← Fill missing with &quot;Missing&quot;
+│   │   └── OneHotEncoder(handle_unknown=&quot;ignore&quot;) ← Create binary columns
+│   │
+│   └── &quot;cat_high&quot; → 1 high-cardinality categorical (country)
+│       ├── SimpleImputer(fill_value=&quot;Missing&quot;)
+│       └── OrdinalEncoder(unknown_value=-1)   ← Integer encoding
+│
+└── Classifier
+    └── XGBClassifier (tuned)
+</code></pre>
+<h3 id="step-72-model-serialization">Step 7.2: Model Serialization</h3>
+<pre><code class="language-python"># Save the entire pipeline as one file
+joblib.dump(pipeline, &quot;models/model.pkl&quot;)     # 4.6 MB
+
+# Save metadata (what features, what metrics, when trained)
+json.dump(metadata, &quot;models/model_metadata.json&quot;)
+</code></pre>
+<p><strong>The metadata file</strong> (<code>models/model_metadata.json</code>) records:<br />
+- Model type: <code>XGBClassifier</code><br />
+- Training date<br />
+- All 5 evaluation metrics<br />
+- Lists of numeric, low-cardinality, and high-cardinality features<br />
+- Random seed (42) for reproducibility</p>
+<hr />
+<h2 id="8-the-streamlit-web-application">8. The Streamlit Web Application</h2>
+<p><strong>File:</strong> <code>app/app.py</code> (2,110 lines)</p>
+<p>The app has <strong>5 pages</strong> accessible from the sidebar:</p>
+<h3 id="page-1-home">Page 1: 🏠 Home</h3>
+<ul>
+<li>Hero banner with hotel imagery</li>
+<li>KPI dashboard (total bookings, cancellation rate, average daily rate)</li>
+<li>"How it works" flow diagram</li>
+<li>Quick statistics and top cancellation drivers</li>
+</ul>
+<h3 id="page-2-prediction">Page 2: 🔮 Prediction</h3>
+<ul>
+<li><strong>Single Prediction:</strong> Fill in a booking form (lead time, hotel type, guests, etc.) and get instant cancellation risk</li>
+<li><strong>Batch Prediction:</strong> Upload a CSV file and get predictions for all bookings</li>
+<li><strong>Booking Comparison:</strong> Compare two bookings side-by-side</li>
+<li>Risk levels: LOW (green), MEDIUM (amber), HIGH (red) with percentage</li>
+</ul>
+<h3 id="page-3-analytics">Page 3: 📊 Analytics</h3>
+<ul>
+<li>Interactive Plotly charts showing:</li>
+<li>Cancellation rates by hotel type, market segment, deposit type</li>
+<li>Lead time distribution for canceled vs. non-canceled</li>
+<li>Monthly booking trends and seasonality</li>
+<li>ADR distribution analysis</li>
+<li>Filters for hotel type, date range, and market segment</li>
+</ul>
+<h3 id="page-4-ai-insights">Page 4: 💡 AI Insights</h3>
+<ul>
+<li>Automated business recommendations based on data patterns</li>
+<li>Feature importance analysis</li>
+<li>Risk factor breakdown</li>
+</ul>
+<h3 id="page-5-model-info">Page 5: ⚙️ Model Info</h3>
+<ul>
+<li>Model metadata display (type, version, training date)</li>
+<li>Performance metrics table</li>
+<li>Feature lists (numeric, categorical)</li>
+<li>Pipeline architecture visualization</li>
+<li>Technology stack</li>
+</ul>
+<h3 id="design-system">Design System</h3>
+<p>The app uses a consistent <strong>hospitality-themed</strong> design:</p>
+<pre><code>Color Palette:
+├── Charcoal (#202522) — sidebar, headings
+├── Ivory (#F7F4ED)    — background
+├── Forest (#315C4B)   — primary buttons, accents
+├── Champagne (#C5A46D)— highlights, brand
+├── Coral (#B85C5C)    — warnings, high risk
+└── Sage (#DCE5DD)     — subtle backgrounds
+</code></pre>
+<hr />
+<h2 id="9-docker-deployment">9. Docker Deployment</h2>
+<p><strong>File:</strong> <code>deployment/Dockerfile</code></p>
+<p>Docker packages the entire app into a <strong>container</strong> — a portable box that runs anywhere.</p>
+<pre><code class="language-dockerfile">FROM python:3.11-slim              # Start with Python 3.11
+
+WORKDIR /app                       # Set working directory
+
+# Install system dependencies
+RUN apt-get update &amp;&amp; \
+    apt-get install -y gcc curl    # gcc for building packages, curl for health checks
+
+# Install Python dependencies (slim — only what the app needs)
+COPY deployment/requirements-deploy.txt .
+RUN pip install --no-cache-dir -r requirements-deploy.txt
+
+# Copy only what's needed for production
+COPY src/ ./src/                   # Source code modules
+COPY app/ ./app/                   # Streamlit app
+COPY models/ ./models/             # Trained model + metadata
+COPY .streamlit/ ./.streamlit/     # Theme configuration
+COPY hotel_bookings.csv .          # Dataset for analytics
+
+EXPOSE 8501                        # Streamlit's default port
+
+# Health check — Docker knows if the app is alive
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+# Start the Streamlit app
+ENTRYPOINT [&quot;streamlit&quot;, &quot;run&quot;, &quot;app/app.py&quot;, \
+            &quot;--server.port=8501&quot;, \
+            &quot;--server.address=0.0.0.0&quot;, \
+            &quot;--server.headless=true&quot;]
+</code></pre>
+<h3 id="how-to-deploy">How to Deploy</h3>
+<pre><code class="language-bash"># Build the Docker image
+docker build -f deployment/Dockerfile -t hotel-predictor .
+
+# Run the container
+docker run -p 8501:8501 hotel-predictor
+
+# Open in browser: http://localhost:8501
+</code></pre>
+<h3 id="production-vs-development-dependencies">Production vs Development Dependencies</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Packages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>Development (everything)</td>
+<td>14 packages: pandas, sklearn, xgboost, shap, mlflow, pytest, jupyter, etc.</td>
+</tr>
+<tr>
+<td><code>requirements-deploy.txt</code></td>
+<td>Production (slim)</td>
+<td>8 packages: only what the app needs to run</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-cicd-pipeline">10. CI/CD Pipeline</h2>
+<p><strong>File:</strong> <code>.github/workflows/ci.yml</code></p>
+<p><strong>CI/CD</strong> = Continuous Integration / Continuous Deployment</p>
+<p>Every time code is pushed to <code>main</code> or <code>develop</code>, GitHub Actions automatically:</p>
+<pre><code>Push to GitHub
+    │
+    ├── Step 1: Checkout code
+    │
+    ├── Step 2: Set up Python (3.10 AND 3.11 — tested on both)
+    │
+    ├── Step 3: Install dependencies
+    │   └── pip install -r requirements.txt
+    │
+    ├── Step 4: Lint with flake8
+    │   ├── Check for syntax errors (strict — fail on errors)
+    │   └── Check for style issues (warnings only)
+    │
+    ├── Step 5: Run tests
+    │   ├── test_features.py (14 tests)
+    │   └── test_model.py (8 tests)
+    │
+    └── Step 6: Verify imports
+        └── python -c &quot;from src.models.train import get_default_models&quot;
+</code></pre>
+<h3 id="test-suite">Test Suite</h3>
+<p><strong>File:</strong> <code>tests/</code></p>
+<table>
+<thead>
+<tr>
+<th>Test File</th>
+<th>What It Tests</th>
+<th># Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_data_pipeline.py</code></td>
+<td>Data loading, cleaning, leakage removal, null handling</td>
+<td>9</td>
+</tr>
+<tr>
+<td><code>test_features.py</code></td>
+<td>Feature engineering correctness, encoding, scaling</td>
+<td>14</td>
+</tr>
+<tr>
+<td><code>test_model.py</code></td>
+<td>Model evaluation, single/batch prediction</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>Example test — verifying <code>total_stay</code> is calculated correctly:</p>
+<pre><code class="language-python">def test_total_stay(self, sample_df):
+    result = engineer_features(sample_df)
+    expected = sample_df[&quot;stays_in_weekend_nights&quot;] + sample_df[&quot;stays_in_week_nights&quot;]
+    pd.testing.assert_series_equal(result[&quot;total_stay&quot;], expected)
+</code></pre>
+<hr />
+<h2 id="11-model-performance-analysis">11. Model Performance Analysis</h2>
+<h3 id="final-model-xgbclassifier-tuned">Final Model: XGBClassifier (Tuned)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>What It Means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td>85.7%</td>
+<td>85.7 out of 100 predictions are correct</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>76.0%</td>
+<td>When model says "will cancel", it's right 76% of the time</td>
+</tr>
+<tr>
+<td><strong>Recall</strong></td>
+<td>69.6%</td>
+<td>Model catches 70% of all actual cancellations</td>
+</tr>
+<tr>
+<td><strong>F1 Score</strong></td>
+<td>0.726</td>
+<td>Balance between precision and recall</td>
+</tr>
+<tr>
+<td><strong>AUC-ROC</strong></td>
+<td>0.922</td>
+<td>Excellent ability to rank risky bookings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="confusion-matrix-breakdown">Confusion Matrix Breakdown</h3>
+<pre><code>                    Predicted
+                 Not Cancel  Cancel
+Actual  Not Cancel  [13,500]    [1,100]   ← 1,100 false alarms (told hotel to worry, guest showed up)
+        Cancel      [2,700]     [5,100]   ← 2,700 missed (told hotel it's fine, guest canceled)
+</code></pre>
+<h3 id="what-the-model-learned-top-features">What the Model Learned (Top Features)</h3>
+<p>Based on feature importance, the most predictive features are:</p>
+<pre><code>1. deposit_type       ████████████████████  (Non-refundable → 99% cancel rate!)
+2. lead_time          ████████████████      (Booked far ahead → more likely to cancel)
+3. adr (price)        ██████████████        (Price affects cancellation behavior)
+4. country            ████████████          (Some countries cancel more)
+5. market_segment     ██████████            (Online TA cancels more than Direct)
+6. total_stay         █████████             (Engineered feature — shorter stays cancel more)
+7. cancellation_ratio ████████              (Engineered — past behavior predicts future)
+8. previous_cancels   ███████               (Repeat cancelers are predictable)
+9. adr_per_person     ██████                (Engineered — per-person cost matters)
+10. booking_changes   █████                 (Engagement signal)
+</code></pre>
+<h3 id="recent-improvements-anti-overfitting-recall-boost">Recent Improvements (Anti-Overfitting &amp; Recall Boost)</h3>
+<p>We added 5 strategies to improve the model:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>What It Does</th>
+<th>File Changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scale_pos_weight=1.7</code></td>
+<td>Tells model: "Missing a cancellation costs 1.7× more"</td>
+<td><code>train.py</code></td>
+</tr>
+<tr>
+<td>Regularization (6 params)</td>
+<td>Prevents model from memorizing training data</td>
+<td><code>train.py</code></td>
+</tr>
+<tr>
+<td><code>early_stopping_rounds=30</code></td>
+<td>Stops training when model stops improving</td>
+<td><code>train.py</code></td>
+</tr>
+<tr>
+<td><code>find_optimal_threshold()</code></td>
+<td>Finds best probability cutoff for balanced P/R</td>
+<td><code>evaluate.py</code></td>
+</tr>
+<tr>
+<td>Threshold-aware predictions</td>
+<td>Uses optimal cutoff instead of hardcoded 0.5</td>
+<td><code>predict.py</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-key-learnings-takeaways">12. Key Learnings &amp; Takeaways</h2>
+<h3 id="technical-concepts-used">Technical Concepts Used</h3>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Where Used</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Binary Classification</strong></td>
+<td>Entire project</td>
+<td>Predicting yes/no (canceled or not)</td>
+</tr>
+<tr>
+<td><strong>Stratified Splitting</strong></td>
+<td><code>train.py</code></td>
+<td>Maintain class ratio in train/test</td>
+</tr>
+<tr>
+<td><strong>One-Hot Encoding</strong></td>
+<td><code>encode.py</code></td>
+<td>Convert categories to numbers</td>
+</tr>
+<tr>
+<td><strong>Feature Engineering</strong></td>
+<td><code>engineer.py</code></td>
+<td>Create domain-knowledge features</td>
+</tr>
+<tr>
+<td><strong>Cross-Validation (5-fold)</strong></td>
+<td><code>tune.py</code></td>
+<td>Robust evaluation, avoid lucky splits</td>
+</tr>
+<tr>
+<td><strong>GridSearchCV</strong></td>
+<td><code>tune.py</code></td>
+<td>Find best hyperparameters</td>
+</tr>
+<tr>
+<td><strong>Early Stopping</strong></td>
+<td><code>train.py</code></td>
+<td>Prevent overfitting</td>
+</tr>
+<tr>
+<td><strong>Regularization</strong></td>
+<td><code>train.py</code></td>
+<td>Control model complexity</td>
+</tr>
+<tr>
+<td><strong>Class Imbalance Handling</strong></td>
+<td><code>train.py</code></td>
+<td><code>scale_pos_weight</code> for fair learning</td>
+</tr>
+<tr>
+<td><strong>Threshold Tuning</strong></td>
+<td><code>evaluate.py</code></td>
+<td>Balance precision and recall</td>
+</tr>
+<tr>
+<td><strong>sklearn Pipeline</strong></td>
+<td><code>build_pipeline.py</code></td>
+<td>Bundle preprocessing + model</td>
+</tr>
+<tr>
+<td><strong>MLflow Tracking</strong></td>
+<td><code>train.py</code>, <code>tune.py</code></td>
+<td>Log and compare experiments</td>
+</tr>
+<tr>
+<td><strong>Dockerization</strong></td>
+<td><code>Dockerfile</code></td>
+<td>Portable deployment</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td><code>ci.yml</code></td>
+<td>Automated testing on every push</td>
+</tr>
+</tbody>
+</table>
+<h3 id="libraries-used">Libraries Used</h3>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>pandas</strong></td>
+<td>Data manipulation and analysis</td>
+</tr>
+<tr>
+<td><strong>numpy</strong></td>
+<td>Numerical computing</td>
+</tr>
+<tr>
+<td><strong>scikit-learn</strong></td>
+<td>ML models, preprocessing, pipelines, metrics</td>
+</tr>
+<tr>
+<td><strong>XGBoost</strong></td>
+<td>Gradient boosting classifier (best model)</td>
+</tr>
+<tr>
+<td><strong>LightGBM</strong></td>
+<td>Alternative gradient boosting</td>
+</tr>
+<tr>
+<td><strong>imbalanced-learn</strong></td>
+<td>SMOTE and resampling techniques</td>
+</tr>
+<tr>
+<td><strong>matplotlib / seaborn</strong></td>
+<td>Static visualizations</td>
+</tr>
+<tr>
+<td><strong>plotly</strong></td>
+<td>Interactive charts in the web app</td>
+</tr>
+<tr>
+<td><strong>Streamlit</strong></td>
+<td>Web application framework</td>
+</tr>
+<tr>
+<td><strong>MLflow</strong></td>
+<td>Experiment tracking</td>
+</tr>
+<tr>
+<td><strong>joblib</strong></td>
+<td>Model serialization</td>
+</tr>
+<tr>
+<td><strong>SHAP</strong></td>
+<td>Model interpretability</td>
+</tr>
+<tr>
+<td><strong>pytest</strong></td>
+<td>Automated testing</td>
+</tr>
+<tr>
+<td><strong>flake8</strong></td>
+<td>Code linting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-4-sprint-development-process">The 4-Sprint Development Process</h3>
+<pre><code>Sprint 1 (Data)         Sprint 2 (Models)       Sprint 3 (Tuning)        Sprint 4 (Deploy)
+┌─────────────┐      ┌─────────────┐        ┌─────────────┐         ┌─────────────┐
+│ Load &amp; EDA  │ ───► │ 6 Baselines │ ────► │ 12 Features │ ─────► │ Pipeline    │
+│ Clean Data  │      │ Compare All │        │ Hyperparams │         │ Streamlit   │
+│ EDA Report  │      │ Pick Winner │        │ Best Model  │         │ Docker      │
+│             │      │ (XGBoost)   │        │ (Tuned XGB) │         │ CI/CD       │
+└─────────────┘      └─────────────┘        └─────────────┘         └─────────────┘
+</code></pre>
+<h3 id="how-to-run-the-project">How to Run the Project</h3>
+<pre><code class="language-bash"># 1. Set up environment
+python -m venv venv
+venv\Scripts\activate            # Windows
+pip install -r requirements.txt
+
+# 2. Run notebooks in order
+cd notebooks/
+jupyter notebook
+# Run: 01 → 02 → 03 → 04 → 05
+
+# 3. Run tests
+pytest tests/ -v
+
+# 4. Launch the app
+streamlit run app/app.py
+
+# 5. Deploy with Docker
+docker build -f deployment/Dockerfile -t hotel-predictor .
+docker run -p 8501:8501 hotel-predictor
+</code></pre>
+<hr />
+<blockquote>
+<p><strong>This document covers the complete project from data to deployment. Each section maps to specific files in the codebase — follow the file links to see the actual implementation.</strong></p>
+</blockquote>
+
+</body>
+</html>

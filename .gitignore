@@ -1,0 +1,47 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual Environments ──
+venv/
+env/
+.env
+.venv/
+
+# ── Jupyter ──
+.ipynb_checkpoints/
+
+# ── Data (large files) ──
+data/raw/
+data/interim/
+data/processed/
+data/external/
+
+# ── Model artifacts (if large) ──
+models/*.joblib
+!models/model.pkl
+
+# ── Experiment tracking ──
+experiments/mlruns/
+mlruns/
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+# ── Distribution ──
+*.tar.gz
+*.zip
